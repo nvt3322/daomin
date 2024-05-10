@@ -12,8 +12,8 @@ const gameContainer = document.getElementById('game-container');
 const flagIcon = document.getElementById('flagIcon');
 const pointerIcon = document.getElementById('pointerIcon')
 
-const GRID_SIZE = 10;
-const NUM_MINES = 10;
+const GRID_SIZE = 20;
+const NUM_MINES = 50;
 
 let board = [];
 
