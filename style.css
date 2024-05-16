@@ -4,6 +4,9 @@
   --background-color: #F7DCB9;
   --gameScreen-background-color: #DEAC80;
   --gameToolBars-background-color : #F7DCB9;
+  --number-cell-background : #B4B4B8;
+  --number-cell-textcolor : #3C3633;
+  --empty-cell-background : #F8FAE5;
 }
 
 * {
@@ -35,7 +38,6 @@ html, body {
   width: 250px;
   height: 250px;
   flex-direction: column;
-  
 }
 
 #menuScreen div {
@@ -59,6 +61,7 @@ html, body {
   border: 1px solid var(--gameScreen-background-color);
   border-radius: 5px;
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
+  display: none;
 }
 
 #gameToolBars {
@@ -122,14 +125,14 @@ html, body {
   color: white;
 }
 
-.hasCount {
-  background-color: yellow;
-  color: white;
+.countCell {
+  background-color: var(--number-cell-background);
+  color: var(--number-cell-textcolor);
+  box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
 }
 
-.notCount {
-  background-color: blue;
-  color: white;
+.emptyCell {
+  background-color: var(--empty-cell-background);
 }
 
 /**
@@ -141,4 +144,5 @@ html, body {
   width: 100px;
   height: 100px;
   border: 1px solid black;
+  display : none;
 }

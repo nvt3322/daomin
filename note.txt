@@ -1,0 +1,2 @@
+Điều kiện thắng :
+Số ô đã mở + số ô đánh cờ = tổng số ô.
