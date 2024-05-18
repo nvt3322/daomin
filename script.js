@@ -1,77 +1,76 @@
-/**
- * Khai báo biến
- * 
- * 
- */
-
 const menuScreen = document.getElementById('menuScreen')
 const gameScreen = document.getElementById('gameScreen')
-const gameContinueButton = document.getElementById('gameContinue')
-const gameConfigButton = document.getElementById('gameConfig')
-const gameStartButton = document.getElementById('gameStart')
+const documentScreen = document.getElementById('documentScreen')
+
+const gameStartBtn = document.getElementById('gameStart')
+gameStartBtn.addEventListener("click", function () {
+  gameScreenDisplay();
+  gameInit();
+})
+const gameContinueBtn = document.getElementById('gameContinue')
+gameContinueBtn.addEventListener("click", function () {
+  gameScreenDisplay();
+})
+
+const gameDocumentBtn = document.getElementById('gameDocument')
+gameDocumentBtn.addEventListener('click', function () {
+  documentScreenDisplay();
+})
+
 const gameContainer = document.getElementById('game-container');
 const flagIcon = document.getElementById('flagIcon');
 const pointerIcon = document.getElementById('pointerIcon')
 const exitIcon = document.getElementById('exitIcon')
 
-const GRID_SIZE = 20;
-const NUM_MINES = 50;
+const GRID_SIZE = 15;
+const NUM_MINES = 25;
+
+let cellOpened = 0;
 
 let board = [];
 
 let isFlag = false;
 
-/**
- * Thêm event vào game
- * 
- * 
- */
-gameStartButton.addEventListener("click", function () {
-  gameScreen.style.display = 'block'
-  gameContainer.style.display = 'grid'
-  menuScreen.style.display = 'none'
-  gameInit();
-})
-
-gameContinueButton.addEventListener("click", function () {
-  gameScreen.style.display = 'block'
-  gameContainer.style.display = 'grid'
-  menuScreen.style.display = 'none'
-})
-
 flagIcon.addEventListener("click", function () {
   isFlag = true;
+  gameContainer.classList.add('flag-cursor');
 })
 
 pointerIcon.addEventListener('click', function () {
-  isFlag = false
+  isFlag = false;
+  gameContainer.classList.remove('flag-cursor');
 })
 
 exitIcon.addEventListener('click', function () {
-  gameScreen.style.display = 'none'
-  menuScreen.style.display = 'block'
+  menuScreenDisplay();
 })
 
-gameContainer.addEventListener('mouseover', function () {
-  if (isFlag)
-    gameContainer.classList.add('flag-cursor');
-});
+function menuScreenDisplay() {
+  menuScreen.style.display = 'flex'
+  gameScreen.style.display = 'none'
+  documentScreen.style.display = 'none'
+}
 
-gameContainer.addEventListener('mouseleave', function () {
-  gameContainer.classList.remove('flag-cursor');
-});
+function gameScreenDisplay() {
+  menuScreen.style.display = 'none'
+  gameScreen.style.display = 'block'
+  documentScreen.style.display = 'none'
+}
 
+function documentScreenDisplay() {
+  menuScreen.style.display = 'none'
+  gameScreen.style.display = 'none'
+  documentScreen.style.display = 'flex'
+}
 
-/**
- * 
- * 
- * 
- */
 function gameInit() {
   while (gameContainer.firstChild) {
     gameContainer.removeChild(gameContainer.firstChild);
   }
+
+  clearInterval(timeCount);
   isFlag = false;
+  cellOpened = 0;
 
   for (let i = 0; i < GRID_SIZE; i++) {
     board[i] = [];
@@ -104,54 +103,73 @@ function gameInit() {
       gameContainer.appendChild(cell);
     }
   }
+  startTimer();
 }
 
-/**
- * Khi nhấn vào 1 ô trong màn hình sẽ xảy ra các trường hợp :
- * Nếu đang là con trỏ bình thường :
- *  - Khi nhấp vào 1 ô sẽ phải tính toán xem 9 ô xung quanh có ô nào có mìn hay không.
- *  ** TH1 : Không phải ô mìn
- *  -- Nếu có ( kết quả > 0 ) thì sẽ hiện số lên ô hiện tại
- *  -- Nếu không có ( kết quả = 0) thì sẽ đệ quy hàm tới 4 ô xung quanh ( trên dưới trái phải )
- *  ** TH2 : Ô mìn 
- *  -- Hiện thông báo thua cuộc.
- * 
- * Nếu đang là con trỏ flag :
- *  - Khi nhấn vào 1 ô thì sẽ gắn cờ lên đó.
- * 
- */
+let timeCount;
+
+function startTimer() {
+  let seconds = 0;
+  const timerElement = document.getElementById('timeCount');
+
+  function updateTimer() {
+    seconds++;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    const formattedTime = [
+      minutes.toString().padStart(2, '0'),
+      remainingSeconds.toString().padStart(2, '0')
+    ].join(':');
+
+    timerElement.textContent = formattedTime;
+  }
+
+  timeCount = setInterval(updateTimer, 1000);
+}
+
+function handleClick(event) {
+  const cell = event.target;
+  const [x, y] = cell.id.split('-').map(Number);
+  revealCell(x, y);
+}
 
 function revealCell(x, y) {
   if (board[x][y].isRevealed) return;
+
   const cell = document.getElementById(`${x}-${y}`);
+  if (isFlag) {
+    board[x][y].isFlag = !board[x][y].isFlag;
+    if (board[x][y].isFlag) cell.classList.add('flagCell')
+    else cell.classList.remove('flagCell');
+    return;
+  }
+  if (board[x][y].isFlag) return;
   if (board[x][y].isMine) {
-    cell.classList.add('mine');
-    gameContainer.removeEventListener('click', handleClick);
+    defeat();
     alert('Bạn đã thua!');
+    //gameInit();
+    return;
+  }
+  cellOpened++;
+  board[x][y].isRevealed = true;
+  const mineCount = calculateNeighborMines(x, y);
+  if (mineCount > 0) {
+    cell.textContent = mineCount;
+    cell.classList.add('countCell');
   } else {
-    board[x][y].isRevealed = true;
-    const mineCount = calculateNeighborMines(x, y);
-    console.log(mineCount)
-    if (mineCount > 0) {
-      cell.textContent = mineCount;
-      cell.classList.add('countCell');
-    } else {
-      cell.classList.add('emptyCell');
-      for (let i = Math.max(0, x - 1); i <= Math.min(x + 1, GRID_SIZE - 1); i++) {
-        for (let j = Math.max(0, y - 1); j <= Math.min(y + 1, GRID_SIZE - 1); j++) {
-          if (x !== i || y !== j) revealCell(i, j)
-        }
+    cell.classList.add('emptyCell');
+    for (let i = Math.max(0, x - 1); i <= Math.min(x + 1, GRID_SIZE - 1); i++) {
+      for (let j = Math.max(0, y - 1); j <= Math.min(y + 1, GRID_SIZE - 1); j++) {
+        if (x !== i || y !== j) revealCell(i, j)
       }
     }
   }
-  if (winConditionCheck) {
+
+  if (cellOpened == 200) {
     alert('Bạn đã thắng');
     gameInit();
   }
-}
-
-function cellClick(){
-  
 }
 
 function calculateNeighborMines(x, y) {
@@ -166,12 +184,18 @@ function calculateNeighborMines(x, y) {
   return count;
 }
 
-function winConditionCheck(){
+function win() {
   return false;
 }
 
-function handleClick(event) {
-  const cell = event.target;
-  const [x, y] = cell.id.split('-').map(Number);
-  revealCell(x, y);
+function defeat() {
+  for (let x = 0; x < GRID_SIZE; x++) {
+    for (let y = 0; y < GRID_SIZE; y++) {     
+      if (board[x][y].isMine) {
+        const cell = document.getElementById(`${x}-${y}`);
+        cell.classList.add('toolbar-icon')
+        cell.classList.add('mine')
+      }
+    }
+  }
 }

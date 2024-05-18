@@ -1,12 +1,14 @@
 :root {
-  --menu-color: #B5C18E;
-  --menu-button-color: red;
   --background-color: #F7DCB9;
-  --gameScreen-background-color: #DEAC80;
-  --gameToolBars-background-color : #F7DCB9;
-  --number-cell-background : #B4B4B8;
-  --number-cell-textcolor : #3C3633;
-  --empty-cell-background : #F8FAE5;
+  --menuScreen-background-color : #D1BB9E;
+  --menuScreen-h1-textcolor : #31363F;
+  --menuScreen-li-textcolor : #322C2B;
+  --gameScreen-background-color: #C7B7A3;
+  --gameToolBars-icon-background-color: #EEF7FF;
+  --number-cell-background: #B4B4B8;
+  --number-cell-textcolor: #0C0C0C;
+  --empty-cell-background: #F8FAE5;
+  --mine-cell-background: #A34343;
 }
 
 * {
@@ -14,17 +16,14 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--background-color);
-}
-
-#container {
-  margin: auto;
 }
 
 /**
@@ -34,20 +33,53 @@ html, body {
 **/
 
 #menuScreen {
-  background-color: var(--menu-color);
+  background-color: var(--menuScreen-background-color);
   width: 250px;
-  height: 250px;
-  flex-direction: column;
-}
-
-#menuScreen div {
-  background-color: var(--menu-button-color);
-  flex-grow: 1;
-  margin: 10px;
+  height: 220px;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #000;
+  flex-direction: column;
+  position: relative;
+}
+
+#menuScreen h1 {
+  font-family: Candara;
+  display: flex;
+  width: 300px;
+  border-radius: 5px;
+  text-align: center;
+  justify-content: center;
+  font-size: 40px;
+  position: absolute;
+  top: -40px;
+  color: var(--menuScreen-li-textcolor);
+  background-color: #AF8F6F;
+  box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
+}
+
+#menuScreen ul {
+  list-style: none;
+  width: 200px;
+}
+
+#menuScreen ul li {
+  font-family: Candara;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  box-sizing: border-box;
+  color: var(--menuScreen-li-textcolor);
+}
+
+#menuScreen ul li:hover {
+  border-top: 3px solid #C08B5C;
+  border-bottom: 3px solid #C08B5C;
+  font-weight: bolder;
+  padding-left: 10px;
 }
 
 /**
@@ -65,8 +97,7 @@ html, body {
 }
 
 #gameToolBars {
-  height: 50px;
-  background-color: var(--gameToolBars-background-color);
+  height: 36px;
   border-radius: 5px;
   margin: 10px;
   display: flex;
@@ -74,23 +105,49 @@ html, body {
   align-items: center;
 }
 
-#gameToolBars div{
-  padding: 5px;
-  border: 1px solid #000;
-  border-radius: 2px;
-  margin: 10px;
+.toolbar-icon{
+  box-sizing: border-box;
+  background-color: var(--gameToolBars-icon-background-color);
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: center;
+  box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
 }
 
-#gameToolBars div img{
-  width: 14px; 
-  height: 14px;
+
+#flagIcon {
+  background-image: url('flag.svg');
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+#pointerIcon {
+  background-image: url('pointer.svg');
+}
+
+#documentIcon {
+  background-image: url('question.svg');
+}
+
+#exitIcon {
+  background-image: url('exit.svg');
+  margin-right: 10px;
+  margin-left: 20px;
 }
 
 #timeCount {
+  background-color: var(--gameToolBars-icon-background-color);
   flex-grow: 1;
-  width: 100px;
-  margin: auto;
-  text-align: center; 
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 75px;
+  margin-right: 75px;
+  box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
 }
 
 .flag-cursor {
@@ -104,8 +161,8 @@ html, body {
 
 #game-container {
   display: grid;
-  grid-template-columns: repeat(20, 30px);
-  grid-template-rows: repeat(20, 30px);
+  grid-template-columns: repeat(15, 30px);
+  grid-template-rows: repeat(15, 30px);
   margin: 10px;
 }
 
@@ -121,28 +178,32 @@ html, body {
 }
 
 .mine {
-  background-color: red;
-  color: white;
+  background-image: url('bomb.svg');
+  background-color: var(--mine-cell-background);
 }
 
 .countCell {
   background-color: var(--number-cell-background);
   color: var(--number-cell-textcolor);
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: Verdana;
 }
 
 .emptyCell {
   background-color: var(--empty-cell-background);
 }
 
-/**
+.flagCell {
+  width: 100%;
+  height: 100%;
+  background-image: url('flag.svg');
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: center;
+}
 
--- Config Screen Css
-
-**/
-#configScreen {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  display : none;
+.flagCell.mine {
+  background-image: url('exit.svg');
 }

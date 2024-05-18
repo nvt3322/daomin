@@ -12,23 +12,27 @@
 <body>
   <div id="container">
     <div id="menuScreen">
-      <div id="gameStart">Bắt đầu</div>
-      <div id="gameContinue">Tiếp tục</div>
-      <div id="gameConfig">Cài đặt</div>
+      <h1>Minesweeper</h1>
+      <ul>
+        <li id="gameStart">Màn chơi mới</li>
+        <li id="gameContinue">Tiếp tục</li>
+        <li id="gameDocument">Hướng dẫn</li>
+      </ul>
     </div>
     <div id="gameScreen">
       <div id="gameToolBars">
-        <div id="flagIcon"><img src="flag.svg"></div>
-        <div id="pointerIcon"><img src="pointer.svg"></div>
+        <div id="flagIcon" class="toolbar-icon"></div>
+        <div id="pointerIcon" class="toolbar-icon"></div>
         <div id="timeCount">00:00</div>
-        <div id="configIcon"><img src="config.svg"></div>
-        <div id="exitIcon"><img src="exit.svg"></div>
+        <div id="documentIcon" class="toolbar-icon"></div>
+        <div id="exitIcon" class="toolbar-icon"></div>
       </div>
       <div id="game-container">
       </div>
+      <div id="winAlert"></div>
+      <div id="defeatAlert"></div>
     </div>
-    <div id="configScreen">
-
+    <div id="documentScreen">
     </div>
   </div>
   <script src="script.js"></script>
