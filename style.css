@@ -9,6 +9,8 @@
   --number-cell-textcolor: #0C0C0C;
   --empty-cell-background: #F8FAE5;
   --mine-cell-background: #A34343;
+  --alert-background-color: #B99470;
+  --alert-text-color: #322C2B;
 }
 
 * {
@@ -48,12 +50,13 @@ body {
   font-family: Candara;
   display: flex;
   width: 300px;
+  padding: 10px;
   border-radius: 5px;
   text-align: center;
   justify-content: center;
   font-size: 40px;
   position: absolute;
-  top: -40px;
+  top: -60px;
   color: var(--menuScreen-li-textcolor);
   background-color: #AF8F6F;
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
@@ -80,6 +83,7 @@ body {
   border-bottom: 3px solid #C08B5C;
   font-weight: bolder;
   padding-left: 10px;
+  cursor: pointer;
 }
 
 /**
@@ -91,9 +95,11 @@ body {
 #gameScreen {
   background-color: var(--gameScreen-background-color);
   border: 1px solid var(--gameScreen-background-color);
-  border-radius: 5px;
+  border-radius: 0px 0px 5px 5px;
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
   display: none;
+  position: relative;
+  box-sizing: border-box;
 }
 
 #gameToolBars {
@@ -115,6 +121,7 @@ body {
   background-size: 50%;
   background-position: center;
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 
@@ -150,14 +157,9 @@ body {
   box-shadow: 1px 5px 9px 2px rgba(0, 0, 0, 0.1);
 }
 
-.flag-cursor {
-  cursor: url('flag.svg'), auto;
-}
-
 .pointer-cursor {
   cursor: pointer;
 }
-
 
 #game-container {
   display: grid;
@@ -180,6 +182,11 @@ body {
 .mine {
   background-image: url('bomb.svg');
   background-color: var(--mine-cell-background);
+  cursor: default;
+}
+
+.flag-cursor {
+  cursor: url('flag.svg'), auto;
 }
 
 .countCell {
@@ -189,10 +196,12 @@ body {
   font-size: 14px;
   font-weight: 500;
   font-family: Verdana;
+  cursor: default;
 }
 
 .emptyCell {
   background-color: var(--empty-cell-background);
+  cursor: default;
 }
 
 .flagCell {
@@ -206,4 +215,52 @@ body {
 
 .flagCell.mine {
   background-image: url('exit.svg');
+}
+
+/***/
+#alert {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+  background-color: var(--alert-background-color);
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  position: absolute;
+  top : -50px;
+  box-sizing: border-box;
+  display: none;
+}
+
+#alert button {
+  width: 75px;
+  height: 30px;
+  margin: 10px;
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+  z-index: 1;
+  font-family: Verdana;
+}
+
+#alert button:hover{
+  color: white;
+  background-color: black;
+}
+
+#alert div {
+  position: relative;
+  font-size: 15px;
+  display: block;
+  color: var(--alert-text-color);
+  font-family: Verdana;
+}
+
+#alert #win {
+  display: none;
+}
+
+#alert #defeat {
+  display: none;
 }
